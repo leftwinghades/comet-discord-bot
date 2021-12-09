@@ -122,8 +122,15 @@ class Music(commands.Cog):
             return await ctx.send(embed=embed)
 
         self.song_queue.append(song_info)
+
+        embed = discord.Embed(title="Now Playing", description="", colour=discord.Colour.dark_green())
+        embed.description += f"[{self.song_queue[0]['title']}]({self.song_queue[0]['yt_url']})"
+        embed.set_thumbnail(url=self.song_queue[0]["thumbnail"])
+        embed.add_field(name="Channel", value=self.song_queue[0]["uploader"], inline=True)
+        embed.add_field(name="Song Duration", value=str(datetime.timedelta(seconds=self.song_queue[0]["duration"])), inline=True)
+
         await self.play_song(ctx, song_info["audio_url"])
-        await ctx.send(f"Now playing: {song_info['title']}")
+        await ctx.send(embed=embed)
 
     @commands.command(aliases=["summon"], brief='summon', description='This is the full description')
     async def join(self, ctx):
